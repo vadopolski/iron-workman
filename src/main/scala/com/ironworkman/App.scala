@@ -1,11 +1,20 @@
 package com.ironworkman
 
+import com.softwaremill.sttp.{Id, Response}
+import com.softwaremill.sttp.quick._
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.web.html._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSImport, ScalaJSDefined}
+import com.softwaremill.sttp._
+import com.softwaremill.sttp.akkahttp._
+import com.softwaremill.sttp.json4s._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 @JSImport("resources/App.css", JSImport.Default)
 @js.native
 object AppCSS extends js.Object
@@ -25,11 +34,38 @@ case class UserItem(id: Long,
 @react class App extends Component {
   type Props = Unit
   case class State(items: Seq[SprintItem], text: String)
+  case class HttpBinResponse(origin: String, headers: Map[String, String])
+//  implicit val serialization = org.json4s.native.Serialization
 
-  override def initialState =
-    State(Seq(
-      SprintItem(0, 5, 30, UserItem(1, "Vadim")),
-                 SprintItem(1, 6, 30, UserItem(1, "Vadim"))), "")
+  override def initialState = {
+//    val value: Id[Response[String]] = sttp.get(uri"http://httpbin.org/ip").send()
+//
+
+//    val request = sttp
+//      .get(uri"https://httpbin.org/get")
+//      .response(asJson[HttpBinResponse])
+//
+//    implicit val backend = AkkaHttpBackend()
+//    val response: Future[Response[HttpBinResponse]] = request.send()
+//
+//    for {
+//      r <- response
+//    } {
+//      println(s"Got response code: ${r.code}")
+//      println(r.body)
+//      backend.close()
+//    }
+
+    val test: Long = 777
+
+    State(
+      Seq(
+        SprintItem(0, test, test, UserItem(1, "Vadim")),
+        SprintItem(1, 6, 30, UserItem(1, "Vadim"))
+      ),
+      ""
+    )
+  }
 
   private val css = AppCSS
 
@@ -48,10 +84,7 @@ case class UserItem(id: Long,
         code("App.scala"),
         " and save to reload."
       ),
-      div(
-        h3("SPRINT LIST"),
-        SprintList(items = state.items)
-      )
+      div(h3("SPRINT LIST"), SprintList(items = state.items))
     )
   }
 }

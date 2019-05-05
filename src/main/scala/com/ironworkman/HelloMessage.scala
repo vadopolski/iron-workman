@@ -1,12 +1,11 @@
 package com.ironworkman
 
+import com.softwaremill.sttp.{Id, Response}
 import slinky.core._
 import slinky.core.annotations.react
 import slinky.core.facade.ReactElement
 import slinky.web.html._
-
-import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSImport, ScalaJSDefined}
+import com.softwaremill.sttp.quick._
 
 
 @react class HelloMessage extends StatelessComponent {
