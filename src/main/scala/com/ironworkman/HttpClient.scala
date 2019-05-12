@@ -2,7 +2,7 @@ package com.ironworkman
 
 import com.softwaremill.sttp._
 
-object Test {
+object HttpClient {
 
   val sort: Option[String] = None
   val query = "http language:scala"
@@ -12,7 +12,7 @@ object Test {
 
   def main(args: Array[String]): Unit = {
     // response.unsafeBody: by default read into a String
-    println(response.unsafeBody)
+    println(response.unsafeBody.take(15))
 
   }
 }
