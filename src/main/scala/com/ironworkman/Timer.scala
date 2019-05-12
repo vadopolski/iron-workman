@@ -29,7 +29,13 @@ import org.scalajs.dom.window._ //nodisplay
 
   override def render(): ReactElement = {
     div(
-      "Seconds: ", state.seconds.toString
+      div(
+        "Seconds: ", state.seconds.toString
+      ),
+      ul(
+        li("First"),
+        li("Second")
+      )
     )
   }
 }
