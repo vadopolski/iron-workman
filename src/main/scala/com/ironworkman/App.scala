@@ -13,9 +13,16 @@ import org.scalajs.dom.ext.Ajax
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
+
+
+
 @JSImport("resources/App.css", JSImport.Default)
 @js.native
 object AppCSS extends js.Object
+
+@JSImport("import GridList from '@material-ui/core/GridList'", JSImport.Default)
+@js.native
+object GridList extends js.Object
 
 @JSImport("resources/logo.svg", JSImport.Default)
 @js.native
@@ -64,13 +71,13 @@ case class UserItem(id: Long, userName: String)
     )
   }
 
-  private val css = AppCSS
+  private val css = TodoAppCSS
 
   def render() = {
     div(className := "App")(
       header(className := "App-header")(
         img(
-          src := ReactLogo.asInstanceOf[String],
+          src := TodoReactLogo.asInstanceOf[String],
           className := "App-logo",
           alt := "logo"
         ),
@@ -81,8 +88,7 @@ case class UserItem(id: Long, userName: String)
         code("App.scala"),
         " and save to reload."
       ),
-      div(h3("SPRINT LIST"), SprintList(items = state.items)),
-      Timer()
+      div(h3("SPRINT LIST"), SprintList(items = state.items))
     )
   }
 }
