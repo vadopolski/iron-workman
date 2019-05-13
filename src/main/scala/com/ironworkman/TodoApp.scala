@@ -6,7 +6,6 @@ import org.scalajs.dom.{Event, html}
 
 import scala.scalajs.js.Date
 import slinky.core.annotations.react
-import slinky.core.Component
 import slinky.web.html._
 import org.scalajs.dom.window._
 
@@ -90,27 +89,18 @@ object TodoReactLogo extends js.Object
   override def render() = {
     div(className := "App")(
       header(className := "App-header")(
-        img(
-          src := TodoReactLogo.asInstanceOf[String],
-          className := "App-logo",
-          alt := "logo"
-        ),
-        h1(className := "App-title")("Welcome to Iron Workman App")
+        h1(className := "App-title")("Iron Workman App"),
+        h3("Seconds: ", state.seconds.toString)
       ),
-      h3("Iron Work Man"),
-      h3("Seconds: ", state.seconds.toString),
-      form(onSubmit := (handleSubmit(_)))(
-        input(
-          onChange := (handleChange(_)),
-          value := state.description
-        ),
-        input(
-          onChange := (handleChange2(_)),
-          value := state.paidTime.toString
-        ),
-        button(s"Add #${state.items.size + 1}")
+      div(className := "row")(
+        InputList(items = state.items,
+          paidTime = state.paidTime,
+          description = state.description,
+          handleSubmit: SyntheticEvent[html.Input, Event] => Unit,
+          handleChange: SyntheticEvent[html.Input, Event] => Unit,
+          handleChange2: SyntheticEvent[html.Input, Event] => Unit),
+        TodoList(items = state.items)
       ),
-      TodoList(items = state.items)
     )
   }
 }
@@ -120,14 +110,14 @@ object TodoReactLogo extends js.Object
 
   override def render() = {
     div(className := "col-md-6")(
+      h3("List of intervals"),
       div(className := "card")(
         ul(className := "list-group")(
           props.items.map { item =>
             li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
           }
         )
-      ),
-      div(s"Total Paid time = ${props.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
+      )
     )
   }
 }
@@ -137,13 +127,47 @@ object TodoReactLogo extends js.Object
 
   override def render() = {
     div(className := "col-md-6")(
-      div(className := "card", style := js.Dynamic.literal(
-        width = "100%"
-      ))(
+      div(className := "card", style := js.Dynamic.literal(width = "100%"))(
         ul(className := "list-group")(
           props.items.map { item =>
-            li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
+            li(className := "list-group-item", key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
           }
+        )
+      ),
+      div(s"Total Paid time = ${props.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
+    )
+  }
+}
+
+@react class InputList extends StatelessComponent {
+  case class Props(items: Seq[IntervalItem],
+                   paidTime: Long,
+                   description: String,
+                   handleSubmit: SyntheticEvent[html.Input, Event] => Unit,
+                   handleChange: SyntheticEvent[html.Input, Event] => Unit,
+                   handleChange2: SyntheticEvent[html.Input, Event] => Unit
+                  )
+
+  override def render() = {
+    div(className := "col-md-6")(
+      h3("Add Interval"),
+      form(onSubmit := (() => props.handleSubmit(_)))(
+        div(className := "row")(
+          div(className := "col-md-12")(
+            input(
+              onChange := (() => props.handleChange(_)),
+              value := props.description
+            )
+          ),
+          div(className := "col-md-12")(
+            input(
+              onChange := (() => props.handleChange2(_)),
+              value := props.paidTime.toString
+            )
+          ),
+          div(className := "col-md-12")(
+            button(s"Add #${props.items.size + 1}")
+          )
         )
       ),
       div(s"Total Paid time = ${props.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
