@@ -112,7 +112,6 @@ object TodoReactLogo extends js.Object
       ),
       TodoList(items = state.items)
     )
-
   }
 }
 
@@ -120,11 +119,32 @@ object TodoReactLogo extends js.Object
   case class Props(items: Seq[IntervalItem])
 
   override def render() = {
-    div(
-      ul(
-        props.items.map { item =>
-          li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
-        }
+    div(className := "col-md-6")(
+      div(className := "card")(
+        ul(className := "list-group")(
+          props.items.map { item =>
+            li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
+          }
+        )
+      ),
+      div(s"Total Paid time = ${props.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
+    )
+  }
+}
+
+@react class TodoItem extends StatelessComponent {
+  case class Props(items: Seq[IntervalItem])
+
+  override def render() = {
+    div(className := "col-md-6")(
+      div(className := "card", style := js.Dynamic.literal(
+        width = "100%"
+      ))(
+        ul(className := "list-group")(
+          props.items.map { item =>
+            li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
+          }
+        )
       ),
       div(s"Total Paid time = ${props.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
     )
