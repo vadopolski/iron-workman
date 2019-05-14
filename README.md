@@ -22,6 +22,6 @@ Your app is ready to be deployed!
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://slinky.dev/docs/installation/).
+You can learn more in the [Slinky Create React App documentation](https://slinky.dev/docs/installation/).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
