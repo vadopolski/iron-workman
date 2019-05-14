@@ -13,7 +13,11 @@ import org.scalajs.dom.window._
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
-case class IntervalItem(id: Long, paidTime: Long, dontStopPayingTime: Long, dontPayTime: Long, description: String)
+case class IntervalItem(id: Long,
+                        paidTime: Long,
+                        dontStopPayingTime: Long,
+                        dontPayTime: Long,
+                        description: String)
 
 @JSImport("resources/App.css", JSImport.Default)
 @js.native
@@ -22,11 +26,12 @@ object TodoAppCSS extends js.Object
 @JSImport("resources/logo.svg", JSImport.Default)
 @js.native
 object TodoReactLogo extends js.Object
-
-
 @react class TodoApp extends Component {
   type Props = Unit
-  case class State(items: Seq[IntervalItem], description: String, paidTime: Long, seconds: Long)
+  case class State(items: Seq[IntervalItem],
+                   description: String,
+                   paidTime: Long,
+                   seconds: Long)
 
   private var interval = -1
 
@@ -71,7 +76,7 @@ object TodoReactLogo extends js.Object
         description = state.description,
         paidTime = state.paidTime,
         dontStopPayingTime = 0,
-        dontPayTime =0
+        dontPayTime = 0
       )
 
       setState(prevState => {
@@ -90,32 +95,58 @@ object TodoReactLogo extends js.Object
   override def render() = {
     div(className := "App")(
       header(className := "App-header")(
-        h1(className := "App-title")("Iron Workman App"),
-        h3("Seconds: ", state.seconds.toString)
+        h1(className := "App-title")("Iron Workman"),
+        h3("Оставшееся время: ", state.seconds.toString)
       ),
       div(className := "row")(
         div(className := "col-md-6")(
-          h3("Add Interval"),
-          form(onSubmit := (handleSubmit(_)))(
+          div(
+            className := "container",
+            style := js.Dynamic
+              .literal(marginTop = "40px", marginLeft = "100px")
+          )(
+            div(className := "row")(h3("Добавьте информацию об интервале")),
+            br(),
             div(className := "row")(
-              div(className := "col-md-12")(
-                input(
-                  onChange := (handleChange(_)),
-                  value := state.description
+              div(className := "col-md-6")(
+                div(className := "form-group")(
+                  label(htmlFor := "description")(
+                    "Ввведите, описание, что было сделано:"
+                  ),
+                  div(className := "input-group")(
+                    input(
+                      className := "form-control",
+                      id := "description",
+                      onChange := (handleChange(_)),
+                      value := state.description
+                    )
+                  )
+                ),
+                div(className := "form-group")(
+                  label(htmlFor := "description")(
+                    "Ввведите оплачиваемое время:"
+                  ),
+                  div(className := "input-group")(
+                    input(
+                      className := "form-control",
+                      id := "description",
+                      onChange := (handleChange2(_)),
+                      value := state.paidTime.toString
+                    )
+                  )
+                ),
+                form(onSubmit := (handleSubmit(_)))(
+                  div(className := "row")(
+                    div(className := "col-md-12")(
+                      button(className := "btn btn-primary")(
+                        s"Добавить интервал #${state.items.size + 1}"
+                      )
+                    )
+                  )
                 )
               ),
-              div(className := "col-md-12")(
-                input(
-                  onChange := (handleChange2(_)),
-                  value := state.paidTime.toString
-                )
-              ),
-              div(className := "col-md-12")(
-                button(s"Add #${state.items.size + 1}")
-              )
-            )
-          ),
-          div(s"Total Paid time = ${state.items.foldLeft(0L)((acc, item) => acc + item.paidTime)}")
+            ),
+          )
         ),
         TodoList(items = state.items)
       ),
@@ -128,15 +159,33 @@ object TodoReactLogo extends js.Object
 
   override def render() = {
     div(className := "col-md-6")(
-      h3("List of intervals"),
-      div(className := "card")(
-        ul(className := "list-group")(
-          props.items.map { item =>
-            li(key := item.id.toString)(s"Paid time: ${item.paidTime}, Description: ${item.description}")
-          }
+      div(
+        className := "container",
+        style := js.Dynamic.literal(marginTop = "40px", marginLeft = "100px")
+      )(
+        div(className := "row")(h3("Список завершенных интервалов")),
+        br(),
+        div(className := "row")(
+          div(className := "col-md-6")(
+            div(
+              className := "card",
+              style := js.Dynamic.literal(width = "100%")
+            )(
+              ul(className := "list-group")(
+                props.items.map { item =>
+                  li(className := "list-group-item", key := item.id.toString)(
+                    s"Оплачиваемое время: ${item.paidTime}, Описание: ${item.description}"
+                  )
+                },
+                div(className := "list-group-item")(
+                  s"Итого оплачиваемое время: ${props.items
+                    .foldLeft(0L)((acc, item) => acc + item.paidTime)}"
+                )
+              )
+            )
+          )
         )
       )
     )
   }
 }
-
