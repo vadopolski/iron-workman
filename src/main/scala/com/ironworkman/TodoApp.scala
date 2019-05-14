@@ -29,6 +29,8 @@ object TodoAppCSS extends js.Object
 object TodoReactLogo extends js.Object
 @react class TodoApp extends Component {
   type Props = Unit
+
+  // TODO: Added state 
   case class State(items: Seq[IntervalItem],
                    description: String,
                    paidTime: Long,
