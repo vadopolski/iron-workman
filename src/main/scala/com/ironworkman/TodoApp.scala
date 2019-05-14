@@ -12,6 +12,7 @@ import org.scalajs.dom.window._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
+import scala.util.Try
 
 case class IntervalItem(id: Long,
                         paidTime: Long,
@@ -33,6 +34,7 @@ object TodoReactLogo extends js.Object
                    paidTime: Long,
                    seconds: Long)
 
+  // TODO: Use cats effect instead 
   private var interval = -1
 
   override def componentDidMount(): Unit = {
@@ -53,7 +55,7 @@ object TodoReactLogo extends js.Object
   }
 
   override def initialState = State(Seq.empty, "", 0, 30)
-
+  
   def handleChange(e: SyntheticEvent[html.Input, Event]): Unit = {
     val eventValue = e.target.value
     setState(_.copy(description = eventValue))
@@ -61,9 +63,11 @@ object TodoReactLogo extends js.Object
 
   def handleChange2(e: SyntheticEvent[html.Input, Event]): Unit = {
     val eventValue = e.target.value
-    setState(_.copy(paidTime = eventValue.toLong))
+    if (Try(eventValue.toLong).isSuccess) {
+      setState(_.copy(paidTime = eventValue.toLong))
+    }
   }
-
+  
   def handleSubmit(e: SyntheticEvent[html.Form, Event]): Unit = {
     e.preventDefault()
 
@@ -92,6 +96,7 @@ object TodoReactLogo extends js.Object
 
   private val css = TodoAppCSS
 
+  // TODO: Separate to elements 
   override def render() = {
     div(className := "App")(
       header(className := "App-header")(
@@ -102,8 +107,7 @@ object TodoReactLogo extends js.Object
         div(className := "col-md-6")(
           div(
             className := "container",
-            style := js.Dynamic
-              .literal(marginTop = "40px", marginLeft = "100px")
+            style := js.Dynamic.literal(marginTop = "40px", marginLeft = "100px")
           )(
             div(className := "row")(h3("Добавьте информацию об интервале")),
             br(),
@@ -113,6 +117,7 @@ object TodoReactLogo extends js.Object
                   label(htmlFor := "description")(
                     "Ввведите, описание, что было сделано:"
                   ),
+                  // TODO: method link to props 
                   div(className := "input-group")(
                     input(
                       className := "form-control",
@@ -135,6 +140,7 @@ object TodoReactLogo extends js.Object
                     )
                   )
                 ),
+                // TODO: Add inputElement 
                 form(onSubmit := (handleSubmit(_)))(
                   div(className := "row")(
                     div(className := "col-md-12")(
@@ -156,7 +162,6 @@ object TodoReactLogo extends js.Object
 
 @react class TodoList extends StatelessComponent {
   case class Props(items: Seq[IntervalItem])
-
   override def render() = {
     div(className := "col-md-6")(
       div(
@@ -172,6 +177,7 @@ object TodoReactLogo extends js.Object
               style := js.Dynamic.literal(width = "100%")
             )(
               ul(className := "list-group")(
+                // TODO: Add iteme element 
                 props.items.map { item =>
                   li(className := "list-group-item", key := item.id.toString)(
                     s"Оплачиваемое время: ${item.paidTime}, Описание: ${item.description}"
